@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import VideoCard from "./VideoCard";
 import Video from "./Video";
+import db from "./firebase";
 
 function App() {
+  const [reels, setReels] = useState([]);
+
+  useEffect(() => {
+    //  App Component will run ONCE when it loads, and never again
+    db.collection("reels").onSnapshot((snapshot) =>
+      setReels(snapshot.docs.map((doc) => doc.data()))
+    );
+  }, []);
+
   return (
     // BEM naming convention
     <div className="app">
@@ -19,47 +29,35 @@ function App() {
       </div>
 
       <div className="app_videos">
+        {reels.map(({ name, avatarSrc, song, url, likes, shares }) => (
+          <Video
+            channel={name}
+            avatarSrc={avatarSrc}
+            song={song}
+            url={url}
+            likes={likes}
+            shares={shares}
+          />
+        ))}
+
         <VideoCard
-          channel="aztecdaddy07"
+          channel="Renault"
           avatarSrc={
-            "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+            "https://images.pexels.com/photos/1521304/pexels-photo-1521304.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
           }
-          song={"WET - Luis JJ"}
+          song={"Got It On Me - Pop Smoke"}
           url={"https://www.dailymotion.com/video/x72e0rs"}
           likes={950}
           shares={30}
         />
+
         <VideoCard
-          channel="luis"
-          avatarSrc={
-            "https://images.pexels.com/photos/1521304/pexels-photo-1521304.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-          }
-          song={"Test Song - Luis JJ"}
-          url={"https://www.dailymotion.com/video/x3q8jw9"}
-          likes={950}
-          shares={30}
-        />
-        <Video
-          channel="apex_2025"
-          avatarSrc={
-            "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-          }
-          song={"Lets Go - Luis JJ"}
-          url={
-            "https://scontent-lax3-1.cdninstagram.com/v/t50.2886-16/118618312_1029386250812793_4041019848012882771_n.mp4?_nc_ht=scontent-lax3-1.cdninstagram.com&_nc_cat=109&_nc_ohc=Q_FahWpgJ6YAX8JOfxc&oe=5F506E27&oh=35f4db0b24b7d5ff4220b1a5883e40a9"
-          }
-          likes={969}
-          shares={33}
-        />
-        <Video
           channel="MoneyMoves"
           avatarSrc={
             "https://images.pexels.com/photos/3802508/pexels-photo-3802508.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
           }
           song={"Sundown - Jack Harlow"}
-          url={
-            "https://scontent-lax3-1.cdninstagram.com/v/t50.2886-16/118502560_675472823315134_2354270812206827125_n.mp4?_nc_ht=scontent-lax3-1.cdninstagram.com&_nc_cat=110&_nc_ohc=ENOY_Klvt64AX-XUS9D&oe=5F504ADD&oh=3a1941e1ce50be18a425a73c744c8278"
-          }
+          url={"https://www.dailymotion.com/video/x3q8jw9"}
           likes={969}
           shares={33}
         />
